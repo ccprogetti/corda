@@ -15,9 +15,10 @@ RUN apt-get update && \
     mkdir -p /opt/corda/additional-node-infos && \
     mkdir -p /etc/corda && \
     addgroup corda && \
-    useradd corda -g corda -m -d /opt/corda && \
-    chown -R corda:corda /opt/corda && \
-    chown -R corda:corda /etc/corda
+    useradd corda -g 0 -m -d /opt/corda && \
+    chown -R corda:0 /opt/corda && \
+    chown -R corda:0 /etc/corda && \
+    chmod -R a+rwX /opt/corda
 
 ENV CORDAPPS_FOLDER="/opt/corda/cordapps" \
     PERSISTENCE_FOLDER="/opt/corda/persistence" \
@@ -50,15 +51,15 @@ VOLUME ["/opt/corda/additional-node-infos"]
 VOLUME ["/etc/corda"]
 
 ##CORDA JAR
-COPY --chown=corda:corda corda.jar /opt/corda/bin/corda.jar
+COPY --chown=corda:0 corda.jar /opt/corda/bin/corda.jar
 ##CONFIG MANIPULATOR JAR
-COPY --chown=corda:corda config-exporter.jar /opt/corda/config-exporter.jar
+COPY --chown=corda:0 config-exporter.jar /opt/corda/config-exporter.jar
 ##CONFIG GENERATOR SHELL SCRIPT
-COPY --chown=corda:corda generate-config.sh /opt/corda/bin/config-generator
+COPY --chown=corda:0 generate-config.sh /opt/corda/bin/config-generator
 ##CORDA RUN SCRIPT
-COPY --chown=corda:corda run-corda.sh /opt/corda/bin/run-corda
+COPY --chown=corda:0 run-corda.sh /opt/corda/bin/run-corda
 ##BASE CONFIG FOR GENERATOR
-COPY --chown=corda:corda starting-node.conf /opt/corda/starting-node.conf
+COPY --chown=corda:0 starting-node.conf /opt/corda/starting-node.conf
 
 USER "corda"
 EXPOSE ${MY_P2P_PORT} ${MY_RPC_PORT} ${MY_RPC_ADMIN_PORT}
